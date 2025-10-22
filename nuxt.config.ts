@@ -2,7 +2,10 @@ import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
+  routeRules: {
+    '/profile': { ssr: false },
+  },
+  devtools: { enabled: false },
   build: {
     transpile: ['vuetify'],
   },
@@ -23,7 +26,23 @@ export default defineNuxtConfig({
           isEnabled: false
         }
       }
-    ]
+    ],
+    [
+      '@nuxtjs/i18n', {
+        defaultLocale: 'it',
+        langDir: '../locales',
+        strategy: 'no_prefix',
+        locales: [{
+          name: 'Italiano',
+          code: 'it',
+          file: 'it.json'
+        },{
+          name: 'English',
+          code: 'en',
+          file: 'en.json'
+        }],
+      }
+    ],
   ],
   vite: {
     vue: {

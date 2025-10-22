@@ -12,7 +12,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     return
   }
 
-  if (!['home', 'terms', 'idea', 'share'].includes(String(to.name))) {
+  if (!['home'].includes(String(to.name))) {
     setRedirect(to.path)
     return loginUser()
   }
