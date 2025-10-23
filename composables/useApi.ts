@@ -38,7 +38,7 @@ export default function () {
       }
       return await response.json();
     },
-    listReading: async (nextToken?: string): Promise<{ readings: Reading[], nextToken?: string }> => {
+    listReadings: async (nextToken?: string): Promise<{ readings: Reading[], nextToken?: string }> => {
       const url = new URL('/api/readings', window.location.origin)
       if (nextToken) {
         url.searchParams.append('nextToken', nextToken)

@@ -54,7 +54,7 @@ export default function() {
 
       const inlineData = response.candidates[0].content.parts.find(part => part.inlineData && part.inlineData.data);
       if (!inlineData || !inlineData.inlineData || !inlineData.inlineData.data) {
-        console.log("Response candidates:", response.candidates);
+        console.log("Response candidates:", JSON.stringify(response.candidates, null, 2));
         throw new Error("No image data found");
       }
 

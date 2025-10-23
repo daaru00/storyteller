@@ -26,7 +26,7 @@ export default function() {
       }))
 
       return {
-        readings,
+        readings: (readings || []).map(readings => ({...readings, id: readings.id.split('#')[1] })) as Reading[],
         nextToken: LastEvaluatedKey ? Buffer.from(JSON.stringify(LastEvaluatedKey)).toString('base64') : undefined
       } as { readings: Reading[], nextToken?: string }
     },

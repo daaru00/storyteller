@@ -15,8 +15,7 @@
 </template>
 
 <script setup>
-const { isLoggedIn, currentUser } = useCustomAuth()
-const { loginUser } = useCustomAuth()
+const { isLoggedIn, currentUser, loginUser } = useCustomAuth()
 const router = useRouter()
 const isHomePage = computed(() => router.currentRoute.value.name === 'home')
 </script>

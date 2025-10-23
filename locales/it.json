@@ -18,5 +18,8 @@
   },
   "book": {
     "read": "Leggi"
+  },
+  "reading": {
+    "list": "La mia lista"
   }
 }

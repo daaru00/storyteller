@@ -1,13 +1,13 @@
 <template>
-  <div v-if="books.length > 0" v-for="genre in GENRES" :key="genre.id" class="mx-3">
+  <div v-if="readings.length > 0" class="mx-3">
     <div>
-      <h2>{{ genre.name }}</h2>
+      <h2>{{ $t('reading.list') }}</h2>
     </div>
     <div>
       <v-sheet class="mx-auto">
         <v-slide-group selected-class="bg-success">
-          <v-slide-group-item v-for="book in getBooksByGenre(genre.id)" :key="book.id">
-            <BookCard :book="book" />
+          <v-slide-group-item v-for="reading in readings" :key="reading.id">
+            <ReadingCard :reading="reading" />
           </v-slide-group-item>
         </v-slide-group>
       </v-sheet>
@@ -16,33 +16,28 @@
 </template>
 
 <script lang="ts" setup>
-const { listBooks } = useApi()
-const books = ref<Book[]>([])
+const { listReadings } = useApi()
+const readings = ref<Reading[]>([])
 const nextToken = ref<string | undefined>(undefined)
 const loading = ref(false)
 
-const loadBooks = async () => {
+const loadReadings = async () => {
   if (loading.value) return
   loading.value = true
   try {
-    const response = await listBooks(nextToken.value)
-    books.value.push(...response.books)
+    const response = await listReadings(nextToken.value)
+    readings.value.push(...response.readings)
     nextToken.value = response.nextToken
     if (nextToken.value) {
-      await loadBooks()
+      await loadReadings()
     }
   } finally {
     loading.value = false
   }
 }
 onMounted(() => {
-  loadBooks()
+  loadReadings()
 })
-
-const { GENRES } = useBookGenres()
-const getBooksByGenre = (genre: string) => {
-  return books.value.filter(book => book.genre === genre)
-}
 </script>
 
 <style scoped>

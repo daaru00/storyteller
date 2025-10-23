@@ -18,5 +18,8 @@
   },
   "book": {
     "read": "Read"
+  },
+  "reading": {
+    "list": "My Reading List"
   }
 }
