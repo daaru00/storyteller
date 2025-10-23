@@ -10,9 +10,9 @@ let config: AwsConfig
 export default function(overrides = {}): AwsConfig {
   if (!config) {
     const runtimeConfig = useRuntimeConfig()
-    const profile = runtimeConfig.aws?.profile || process.env.AWS_PROFILE || process.env.AWS_DEFAULT_PROFILE;
+    const profile = runtimeConfig?.aws?.profile || process.env.AWS_PROFILE || process.env.AWS_DEFAULT_PROFILE;
     config = {
-      region: runtimeConfig.aws?.region || process.env.AWS_REGION || process.env.AWS_DEFAULT_REGION || '',
+      region: runtimeConfig?.aws?.region || process.env.AWS_REGION || process.env.AWS_DEFAULT_REGION || '',
       credentials: profile
         ? fromIni({
             profile: profile,

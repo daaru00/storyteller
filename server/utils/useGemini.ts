@@ -4,11 +4,11 @@ import type { ImageConfig } from "@google/genai";
 export default function() {
   const runtimeConfig = useRuntimeConfig()
   const ai = new GoogleGenAI({
-    apiKey: runtimeConfig.gemini.apiKey || process.env.GEMINI_API_KEY
+    apiKey: runtimeConfig?.gemini.apiKey || process.env.GEMINI_API_KEY
   });
 
-  const imageModelId = runtimeConfig.gemini.imageModelId || process.env.GEMINI_IMAGE_MODEL_ID || "gemini-2.5-flash-image";
-  const textModelId = runtimeConfig.gemini.textModelId || process.env.GEMINI_TEXT_MODEL_ID || "gemini-2.5-flash";
+  const imageModelId = runtimeConfig?.gemini.imageModelId || process.env.GEMINI_IMAGE_MODEL_ID || "gemini-2.5-flash-image";
+  const textModelId = runtimeConfig?.gemini.textModelId || process.env.GEMINI_TEXT_MODEL_ID || "gemini-2.5-flash";
 
   return {
     async generateText(prompt: string): Promise<string> {

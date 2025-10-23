@@ -20,7 +20,8 @@ export default defineNuxtConfig({
     gemini: {
       apiKey: '',
       imageModelId: '',
-      textModelId: ''
+      textModelId: '',
+      historyLimit: 300
     }
   },
   devtools: { enabled: false },

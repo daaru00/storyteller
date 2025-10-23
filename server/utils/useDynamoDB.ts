@@ -12,7 +12,7 @@ export default function(): DynamoDBConfig {
     const runtimeConfig = useRuntimeConfig()
     config = {
       client: DynamoDBDocumentClient.from(new DynamoDBClient(useAwsConfig())),
-      tableName: runtimeConfig.dynamodb?.tableName
+      tableName: runtimeConfig?.dynamodb?.tableName
     }
   }
   return config

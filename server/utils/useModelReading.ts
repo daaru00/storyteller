@@ -8,6 +8,9 @@ export default function() {
   const { generateJson, generateImage } = useGemini()
   const { client: s3, bucketName, publicUrl } = useS3()
 
+  const runtimeConfig = useRuntimeConfig()
+  const historyLimit = runtimeConfig?.gemini?.historyLimit || 300;
+
   return {
     listReadings: async (userId: string, nextToken?: string) => {
       const { Items: readings, LastEvaluatedKey } = await db.send(new QueryCommand({
@@ -124,6 +127,11 @@ export default function() {
       }
     },
     updateHistory: async (userId: string, readingId: string, content: string) => {
+      const sentences = content.split('.')
+      if (sentences.length > historyLimit) {
+        content = sentences.slice(sentences.length - historyLimit).join('.')
+      }
+
       await s3.send(new PutObjectCommand({
         Bucket: bucketName,
         Key: `readings/${userId}/${readingId}.txt`,

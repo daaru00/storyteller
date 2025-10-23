@@ -12,8 +12,8 @@ export default function(): S3Config {
     const runtimeConfig = useRuntimeConfig()
     config = {
       client: new S3Client(useAwsConfig()),
-      bucketName: runtimeConfig.s3?.bucketName,
-      publicUrl: runtimeConfig.s3?.publicUrl
+      bucketName: runtimeConfig?.s3?.bucketName,
+      publicUrl: runtimeConfig?.s3?.publicUrl
     }
   }
   return config
