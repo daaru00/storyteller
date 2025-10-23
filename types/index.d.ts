@@ -1,3 +1,5 @@
+export { AuthUser, Profile };
+
 declare global {
   interface AuthUser {
     sub: string
@@ -6,5 +8,6 @@ declare global {
 
   interface Profile extends AuthUser {
     name: string
+    image?: string
   }
 }
