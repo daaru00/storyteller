@@ -6,5 +6,17 @@
   "error": {
     "backToHome": "Torna alla Home",
     "message": "Si è verificato un errore imprevisto."
+  },
+  "genres": {
+    "adventure": "Avventura",
+    "fantasy": "Fantasy",
+    "sci-fi": "Fantascienza",
+    "crime": "Giallo",
+    "romance": "Romantico",
+    "horror": "Horror",
+    "kids": "Bambini"
+  },
+  "book": {
+    "read": "Leggi"
   }
 }

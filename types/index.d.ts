@@ -1,4 +1,4 @@
-export { AuthUser, Profile };
+export { AuthUser, Profile, Book };
 
 declare global {
   interface AuthUser {
@@ -9,5 +9,23 @@ declare global {
   interface Profile extends AuthUser {
     name: string
     image?: string
+  }
+
+  interface Book {
+    id: string
+    title: {
+      en: string
+      it: string
+    }
+    genre: string
+    summary: {
+      en: string
+      it: string
+    }
+    imageUrl: string
+  }
+
+  interface Reading {
+    id: string
   }
 }

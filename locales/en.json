@@ -6,5 +6,17 @@
   "error": {
     "backToHome": "Back to Home",
     "message": "An unexpected error has occurred."
+  },
+  "genres": {
+    "adventure": "Adventure",
+    "fantasy": "Fantasy",
+    "sci-fi": "Sci-Fi",
+    "crime": "Crime",
+    "romance": "Romance",
+    "horror": "Horror",
+    "kids": "Kids"
+  },
+  "book": {
+    "read": "Read"
   }
 }

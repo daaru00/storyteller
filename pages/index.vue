@@ -1,9 +1,5 @@
 <template>
-  <v-row class="mt-10" align="center" justify="center">
-    <v-col cols="12">
-      
-    </v-col>
-  </v-row>
+  <book-list />
 </template>
 
 <script setup>
