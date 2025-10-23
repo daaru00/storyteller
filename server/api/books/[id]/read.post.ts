@@ -7,12 +7,12 @@ export default defineEventHandler(async (event) => {
   if (!book) {
     throw createError({ statusCode: 404, statusMessage: 'Book not found' })
   }
-  
-  const { getReading, createReading } = useModelReading()
-  let reading = await getReading(user.id, book.id)
-  if (!reading) {
-    reading = await createReading(user.id, book.id)
-  }
 
-  return reading
+  const body = await readBody(event)
+
+  const { createReading, updateHistory } = useModelReading()
+  let reading = await createReading(user.sub, book, body.locale || 'en')
+  await updateHistory(user.sub, reading.id, reading.text)
+
+  return reading as Reading
 })

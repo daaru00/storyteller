@@ -14,7 +14,13 @@ export default defineNuxtConfig({
       tableName: '',
     },
     s3: {
-      bucketName: ''
+      bucketName: '',
+      publicUrl: ''
+    },
+    gemini: {
+      apiKey: '',
+      imageModelId: '',
+      textModelId: ''
     }
   },
   devtools: { enabled: false },
@@ -48,11 +54,11 @@ export default defineNuxtConfig({
           name: 'Italiano',
           code: 'it',
           file: 'it.json'
-        },{
+        }, {
           name: 'English',
           code: 'en',
           file: 'en.json'
-        }],
+        }]
       }
     ],
   ],

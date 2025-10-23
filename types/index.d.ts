@@ -1,4 +1,4 @@
-export { AuthUser, Profile, Book };
+export { AuthUser, Profile, Book, Reading };
 
 declare global {
   interface AuthUser {
@@ -26,6 +26,10 @@ declare global {
   }
 
   interface Reading {
-    id: string
+    id: string,
+    book: Book,
+    text: string,
+    imageUrl: string,
+    choices: string[]
   }
 }

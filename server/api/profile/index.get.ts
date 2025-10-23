@@ -4,8 +4,8 @@ export default defineEventHandler(async (event) => {
   const { getProfile } = useModelProfile()
   const profile = await getProfile(user.email)
 
-  const { getProfileImage } = useGravatar()
-  profile.image = getProfileImage(profile.email)
-
-  return profile
+  return {
+    ...user,
+    ...profile
+  } as Profile
 })

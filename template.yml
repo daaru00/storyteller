@@ -39,10 +39,14 @@ Parameters:
     AllowedValues:
       - "DISABLED"
       - "ENABLED"
-  GeminiModelId:
+  GeminiTextModelId:
     Type: String
-    Description: "Gemini model identifier"
-    Default: "gemini-1.5-flash"
+    Description: "Gemini text model identifier"
+    Default: "gemini-2.5-flash"
+  GeminiImageModelId:
+    Type: String
+    Description: "Gemini image model identifier"
+    Default: "gemini-2.5-flash-image"
   GeminiApiKey:
     Type: String
     Description: "Gemini api key"
@@ -325,6 +329,10 @@ Resources:
           AUTH_ORIGIN: !If [IsDomainProvided, !Sub "https://${DomainName}/api/auth", !Sub "https://${Distribution.DomainName}/api/auth"]
           NUXT_DYNAMODB_TABLE_NAME: !Ref DataTable
           NUXT_S3_BUCKET_NAME: !Ref MediaBucket
+          NUXT_S3_PUBLIC_URL: !If [IsDomainProvided, !Sub "https://${DomainName}/media", !Sub "https://${Distribution.DomainName}/media"]
+          GEMINI_API_KEY: !Ref GeminiApiKey
+          GEMINI_IMAGE_MODEL_ID: !Ref GeminiImageModelId
+          GEMINI_TEXT_MODEL_ID: !Ref GeminiTextModelId
       Policies: 
         - DynamoDBCrudPolicy:
             TableName: !Ref DataTable

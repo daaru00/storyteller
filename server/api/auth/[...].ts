@@ -6,6 +6,13 @@ export default NuxtAuthHandler({
   pages: {
     signIn: '/',
   },
+  callbacks: {
+    async session({ session, token }) {
+      // @ts-ignore
+      session.user.sub = token.sub
+      return session
+    },
+  },
   providers: [{
     id: "custom",
     name: "Auth",
@@ -37,8 +44,10 @@ export default NuxtAuthHandler({
       
       return {
         id: profile.sub,
-        email: profile.email
+        email: profile.email,
+        name: profile.name,
+        image: profile.picture
       }
-    }
+    },
   }],
 })
