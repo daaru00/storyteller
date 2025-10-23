@@ -1,8 +1,11 @@
 export default defineEventHandler(async (event) => {
   const user = event.context.auth
 
-  const { getProfileImage } = useGravatar()
-  user.image = getProfileImage(user.email)
+  const { getProfile } = useModelProfile()
+  const profile = await getProfile(user.email)
 
-  return user
+  const { getProfileImage } = useGravatar()
+  profile.image = getProfileImage(profile.email)
+
+  return profile
 })

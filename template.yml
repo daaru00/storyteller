@@ -343,19 +343,11 @@ Resources:
           AUTH_ORIGIN: !If [IsDomainProvided, !Sub "https://${DomainName}/api/auth", !Sub "https://${Distribution.DomainName}/api/auth"]
           NUXT_DYNAMODB_TABLE_NAME: !Ref DataTable
           NUXT_S3_BUCKET_NAME: !Ref MediaBucket
-          NUXT_EVENTS_BUS: "default"
-          NUXT_EVENTS_SOURCE: !Ref AWS::StackName
       Policies: 
         - DynamoDBCrudPolicy:
             TableName: !Ref DataTable
         - S3CrudPolicy:
             BucketName: !Ref MediaBucket
-        - Statement:
-          - Effect: "Allow"
-            Action: "bedrock:InvokeModel"
-            Resource: "*"
-        - EventBridgePutEventsPolicy:
-            EventBusName: default
       Events:
         ProxyResource:
           Type: HttpApi

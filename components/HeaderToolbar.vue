@@ -30,8 +30,5 @@ header a {
   header .header-title {
     font-size: 1rem !important;
   }
-  header .select-container {
-    margin-right: 0.2rem !important;
-  }
 }
 </style>

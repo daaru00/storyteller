@@ -6,7 +6,10 @@
 
 <script setup>
 const { locale, locales, setLocale } = useI18n()
-const available = computed(() => locales.value.map(locale => locale.code))
+const available = computed(() => locales.value.map(locale => ({
+  title: locale.name,
+  value: locale.code
+})))
 const selected = computed({
   get() {
     return locale.value

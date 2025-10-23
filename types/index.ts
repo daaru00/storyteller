@@ -3,4 +3,8 @@ declare global {
     sub: string
     email: string
   }
+
+  interface Profile extends AuthUser {
+    name: string
+  }
 }

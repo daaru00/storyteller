@@ -1,4 +1,5 @@
 import { NuxtAuthHandler } from '#auth'
+const { createProfile, isRegistered } = useModelProfile()
 
 export default NuxtAuthHandler({
   secret: process.env.AUTH_SECRET,
@@ -23,6 +24,17 @@ export default NuxtAuthHandler({
     idToken: true,
     checks: ['pkce', 'state'],
     async profile(profile: any) {
+      const exist = await isRegistered(profile.email)
+      if (!exist) {
+        await createProfile(profile.email, {
+          givenName: profile.given_name,
+          familyName: profile.family_name
+        })
+        console.log('User registered', profile)
+      } else {
+        console.log('User signed in', profile)
+      }
+      
       return {
         id: profile.sub,
         email: profile.email

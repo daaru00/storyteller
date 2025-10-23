@@ -5,6 +5,18 @@ export default defineNuxtConfig({
   routeRules: {
     '/profile': { ssr: false },
   },
+  runtimeConfig: {
+    aws: {
+      region: '',
+      profile: ''
+    },
+    dynamodb: {
+      tableName: '',
+    },
+    s3: {
+      bucketName: ''
+    }
+  },
   devtools: { enabled: false },
   build: {
     transpile: ['vuetify'],
