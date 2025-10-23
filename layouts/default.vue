@@ -1,11 +1,11 @@
 <template>
   <v-app>
-    <v-app-bar scroll-behavior="elevate" class="bg-background">
+    <v-app-bar scroll-behavior="elevate" class="bg-background d-print-none">
       <client-only>
         <header-toolbar />
       </client-only>
     </v-app-bar>
-    <v-main>
+    <v-main style="padding-top: 64px;">
       <slot />
       <notification-alert />
     </v-main>

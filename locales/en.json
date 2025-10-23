@@ -2,5 +2,9 @@
   "header": {
     "title": "Storyteller",
     "login": "Login"
+  },
+  "error": {
+    "backToHome": "Back to Home",
+    "message": "An unexpected error has occurred."
   }
 }

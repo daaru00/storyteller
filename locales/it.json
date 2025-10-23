@@ -2,5 +2,9 @@
   "header": {
     "title": "Raccontastorie",
     "login": "Accedi"
+  },
+  "error": {
+    "backToHome": "Torna alla Home",
+    "message": "Si è verificato un errore imprevisto."
   }
 }

@@ -1,7 +1,11 @@
 <template>
   <NuxtLayout>
-    <v-app>
-      <NuxtPage />
-    </v-app>
+    <NuxtPage />
   </NuxtLayout>
 </template>
+
+<style>
+footer {
+  flex: initial !important;
+}
+</style>
