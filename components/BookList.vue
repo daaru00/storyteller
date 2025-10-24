@@ -1,7 +1,7 @@
 <template>
-  <div v-if="books.length > 0" v-for="genre in GENRES" :key="genre.id" class="mx-3">
-    <div>
-      <h2>{{ genre.name }}</h2>
+  <div v-if="books.length > 0" v-for="genre in GENRES" :key="genre.id" class="mx-3 mt-8">
+    <div class="mb-3">
+      <h2 class="text-h2">{{ genre.name }}</h2>
     </div>
     <div>
       <v-sheet class="mx-auto">

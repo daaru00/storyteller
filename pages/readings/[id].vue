@@ -2,17 +2,31 @@
   <v-container max-width="800px">
     <v-row v-if="reading">
       <v-col cols="12" md="4">
-        <v-img :src="reading.imageUrl" height="400px" />
+        <v-img :src="reading.imageUrl" cover height="100%" />
       </v-col>
       <v-col cols="12" md="8">
-        <p>{{ reading.text }}</p>
+        <p class="text-justify">{{ reading.text }}</p>
+        <div class="text-right">
+          <v-btn v-if="canSpeech && !isSpeaking" @click="startSpeech" icon="mdi-volume-high" size="x-small"></v-btn>
+          <v-btn v-if="canSpeech && isSpeaking" @click="cancelSpeech" color="red-darken-1" icon="mdi-stop" size="x-small"></v-btn>
+        </div>
       </v-col>
       <v-col>
-        <v-row>
-          <v-col cols="12" v-for="(choice, index) in reading.choices" :key="index" class="text-center">
-            <v-btn @click="selectChoice(index)" :disabled="loading">
-              <span class="choice">{{ choice }}</span>
-            </v-btn>
+        <v-row v-if="loading">
+          <v-col cols="12" class="text-center">
+            <v-progress-circular indeterminate />
+          </v-col>
+        </v-row>
+        <v-row v-else>
+          <v-col cols="12">
+            <v-list lines="two">
+              <v-list-item v-for="(choice, index) in reading.choices" :key="index" @click="selectChoice(index)">
+                <template v-slot:prepend>
+                  <v-avatar><v-chip>{{ index + 1 }}</v-chip></v-avatar>
+                </template>
+                <span class="font-weight-regular text-high-emphasis">{{ choice }}</span>
+              </v-list-item>
+            </v-list>
           </v-col>
         </v-row>
       </v-col>
@@ -45,6 +59,23 @@ const selectChoice = async (choiceIndex: number) => {
   } finally {
     loading.value = false
   }
+}
+
+const canSpeech = ref<boolean>(window.speechSynthesis !== undefined)
+const isSpeaking = ref<boolean>(false)
+const startSpeech = () => {
+  if (!reading.value) return;
+
+  cancelSpeech();
+  const utterance = new SpeechSynthesisUtterance(reading.value.text);
+  utterance.lang = locale.value;
+  window.speechSynthesis.speak(utterance);
+  isSpeaking.value = true;
+}
+
+const cancelSpeech = () => {
+  window.speechSynthesis.cancel();
+  isSpeaking.value = false;
 }
 </script>
 

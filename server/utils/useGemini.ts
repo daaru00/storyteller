@@ -1,4 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, Modality } from "@google/genai";
 import type { ImageConfig } from "@google/genai";
 
 export default function() {
@@ -14,7 +14,10 @@ export default function() {
     async generateText(prompt: string): Promise<string> {
       const response = await ai.models.generateContent({
         model: textModelId,
-        contents: prompt
+        contents: prompt,
+        config: {
+          responseModalities: [Modality.TEXT]
+        }
       });
 
       if (!response || !response.text) {
@@ -29,7 +32,8 @@ export default function() {
         contents: prompt,
         config: {
           responseMimeType: "application/json",
-          responseSchema: schema
+          responseSchema: schema,
+          responseModalities: [Modality.TEXT]
         }
       });
 
@@ -44,7 +48,8 @@ export default function() {
         model: imageModelId,
         contents: prompt,
         config: {
-          imageConfig: config
+          imageConfig: config,
+          responseModalities: [Modality.IMAGE]
         }
       });
     

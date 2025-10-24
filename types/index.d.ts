@@ -30,6 +30,7 @@ declare global {
     book: Book,
     text: string,
     imageUrl: string,
-    choices: string[]
+    choices: string[],
+    counter: number,
   }
 }

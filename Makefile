@@ -19,7 +19,7 @@ clean:
 # Deploy
 
 deploy-backend:
-	sam deploy --profile ${AWS_PROFILE} --region ${AWS_REGION} --stack-name ${STACK_NAME} --resolve-s3 --capabilities CAPABILITY_IAM --parameter-overrides AutoDeploy=DISABLED AIEngine=gemini
+	sam deploy
 
 deploy-frontend:
 	aws --profile ${AWS_PROFILE} --region ${AWS_REGION} s3 cp --recursive .output/public s3://${STACK_NAME}-${AWS_REGION}/

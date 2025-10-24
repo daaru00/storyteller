@@ -1,7 +1,7 @@
 <template>
   <div v-if="readings.length > 0" class="mx-3">
-    <div>
-      <h2>{{ $t('reading.list') }}</h2>
+    <div class="mb-3">
+      <h2 class="text-h2">{{ $t('reading.list') }}</h2>
     </div>
     <div>
       <v-sheet class="mx-auto">

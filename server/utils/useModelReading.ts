@@ -4,7 +4,7 @@ import crypto from "crypto"
 
 export default function() {
   const { client: db, tableName } = useDynamoDB()
-  const readAttributes = ['id', 'text', 'imageUrl', 'choices', 'book']
+  const readAttributes = ['id', 'text', 'imageUrl', 'choices', 'book', 'counter']
   const { generateJson, generateImage } = useGemini()
   const { client: s3, bucketName, publicUrl } = useS3()
 
@@ -58,7 +58,8 @@ export default function() {
       const uuid = crypto.randomUUID()
 
       const prompt = `
-        You write a story based on the choice made by the reader. The story title is "${book.title}" and the genre is "${book.genre}".
+        You write a story based on the choice made by the reader. 
+        The story title is "${book.title}" and the genre is "${book.genre}".
         The story prompt is: ${book.summary.en}.
         Generate the very first paragraph of the story. The story will be interactive, so end the paragraph with a situation that requires the reader to make a choice.
         Respond with a JSON object with two fields: "text" containing the next part of the story, and "choices" containing a list of 3 possible next choices.
@@ -101,7 +102,8 @@ export default function() {
         book,
         text: response.text,
         imageUrl: publicUrl + `/${userId}/readings/${uuid}.png`,
-        choices: response.choices
+        choices: response.choices,
+        counter: 0,
       }
 
       await db.send(new PutCommand({
@@ -147,6 +149,7 @@ export default function() {
         ${history}
         ---
         The reader made the choice: "${choice}".
+        The reader so far made ${reading.counter || 1} choices in the story.
         Continue the story with a new paragraph, keeping the same style and tone. The story will be interactive, so end the paragraph with a situation that requires the reader to make a choice.
         Respond with a JSON object with two fields: "text" containing the next part of the story, and "choices" containing a list of 3 possible next choices.
         The generated content for "text" and "choices" must be in locale "${locale}".
@@ -183,6 +186,7 @@ export default function() {
       }));
 
       const cacheBusterParam = '?t=' + Date.now();
+      reading.counter = (reading.counter || 1) + 1;
 
       await db.send(new UpdateCommand({
         TableName: tableName,
@@ -190,23 +194,26 @@ export default function() {
           entity: 'READ',
           id: userId + '#' + reading.id
         },
-        UpdateExpression: 'SET #text = :text, #imageUrl = :imageUrl, #choices = :choices',
+        UpdateExpression: 'SET #text = :text, #imageUrl = :imageUrl, #choices = :choices, #counter = :counter',
         ExpressionAttributeValues: {
           ':text': response.text,
           ':imageUrl': publicUrl + `/${userId}/readings/${reading.id}.png${cacheBusterParam}`,
-          ':choices': response.choices
+          ':choices': response.choices,
+          ':counter': reading.counter,
         },
         ExpressionAttributeNames: {
           '#text': 'text',
           '#imageUrl': 'imageUrl',
-          '#choices': 'choices'
+          '#choices': 'choices',
+          '#counter': 'counter'
         }
       }))
 
       return {
         text: response.text,
         imageUrl: publicUrl + `/${userId}/readings/${reading.id}.png${cacheBusterParam}`,
-        choices: response.choices
+        choices: response.choices,
+        counter: reading.counter,
       }
     },
   }

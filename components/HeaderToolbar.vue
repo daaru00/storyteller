@@ -1,5 +1,5 @@
 <template>
-  <v-btn v-if="!isHomePage" @click="navigateTo('/')" icon="mdi-home"></v-btn>
+  <v-btn v-if="!isHomePage" @click="navigateTo('/')" icon="mdi-arrow-left"></v-btn>
   <v-spacer></v-spacer>
   <template v-if="isLoggedIn">
     <v-avatar class="cursor-pointer" size="32">
