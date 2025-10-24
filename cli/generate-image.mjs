@@ -83,29 +83,6 @@ async function saveImageUrl(book, imageUrl) {
 async function main() {
   const books = await listBooks();
   for (const book of books) {
-    if (![
-      'the-thing-in-the-well',
-      'the-unseen',
-      'the-vampire-of-carpathia',
-      'to-the-one-i-love',
-      'you-before-me',
-      'vanished',
-      'zero-g',
-      'the-way-of-shadows',
-      'the-treasure-of-the-crimson-peaks',
-      'the-thing-in-the-well',
-      'the-unseen',
-      'the-vampire-of-carpathia',
-      'the-very-curious-caterpillar',
-      'where-the-monsters-play',
-      'the-grumblebeast',
-      'the-girl-with-the-magic-mind',
-      'the-dukes-desire',
-      'the-call-of-the-north'
-    ].includes(book.id)) {
-      continue;
-    }
-
     const url = await generateImage(book);
     await saveImageUrl(book, url);
     await new Promise(resolve => setTimeout(resolve, 5000));

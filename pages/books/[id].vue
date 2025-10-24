@@ -28,9 +28,15 @@ onMounted(async () => {
   book.value = await getBook(bookId)
 })
 
+const { isLoggedIn, loginUser } = useCustomAuth()
 const { readBook } = useApi()
 const loading = ref(false)
 const startReading = async () => {
+  if (!isLoggedIn.value) {
+    await loginUser()
+    return
+  }
+
   loading.value = true
   try {
     const reading = await readBook(bookId, locale.value)

@@ -21,7 +21,7 @@ export default defineNuxtConfig({
       apiKey: '',
       imageModelId: '',
       textModelId: '',
-      historyLimit: 300
+      historyLimit: 50
     }
   },
   devtools: { enabled: false },

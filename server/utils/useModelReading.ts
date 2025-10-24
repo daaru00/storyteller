@@ -4,12 +4,12 @@ import crypto from "crypto"
 
 export default function() {
   const { client: db, tableName } = useDynamoDB()
-  const readAttributes = ['id', 'text', 'imageUrl', 'choices', 'book', 'counter']
+  const readAttributes = ['id', 'text', 'imageUrl', 'choices', 'book', 'counter', 'progress']
   const { generateJson, generateImage } = useGemini()
   const { client: s3, bucketName, publicUrl } = useS3()
 
   const runtimeConfig = useRuntimeConfig()
-  const historyLimit = runtimeConfig?.gemini?.historyLimit || 300;
+  const historyLimit = runtimeConfig?.gemini?.historyLimit || 50;
 
   return {
     listReadings: async (userId: string, nextToken?: string) => {
@@ -60,7 +60,7 @@ export default function() {
       const prompt = `
         You write a story based on the choice made by the reader. 
         The story title is "${book.title}" and the genre is "${book.genre}".
-        The story prompt is: ${book.summary.en}.
+        The story prompt is: ${book.prompt || book.summary.en}.
         Generate the very first paragraph of the story. The story will be interactive, so end the paragraph with a situation that requires the reader to make a choice.
         Respond with a JSON object with two fields: "text" containing the next part of the story, and "choices" containing a list of 3 possible next choices.
         The generated content for "text" and "choices" must be in locale "${locale}".
@@ -104,6 +104,7 @@ export default function() {
         imageUrl: publicUrl + `/${userId}/readings/${uuid}.png`,
         choices: response.choices,
         counter: 0,
+        progress: 0
       }
 
       await db.send(new PutCommand({
@@ -141,28 +142,41 @@ export default function() {
       }))
     },
     generateNext: async (userId: string, reading: Reading, history: string, choice: string, locale: string) => {
-      const prompt = `
+      let prompt = `
         You write a story based on the choice made by the reader. The story title is "${reading.book.title}" and the genre is "${reading.book.genre}".
-        The story prompt is: ${reading.book.summary.en}.
+        The story prompt is: ${reading.book.prompt || reading.book.summary.en}.
         Here the story so far:
         ---
         ${history}
         ---
         The reader made the choice: "${choice}".
-        The reader so far made ${reading.counter || 1} choices in the story.
-        Continue the story with a new paragraph, keeping the same style and tone. The story will be interactive, so end the paragraph with a situation that requires the reader to make a choice.
-        Respond with a JSON object with two fields: "text" containing the next part of the story, and "choices" containing a list of 3 possible next choices.
-        The generated content for "text" and "choices" must be in locale "${locale}".
       `
+
+      if (reading.progress < 100) {
+        prompt += `
+          The reader so far made ${reading.counter || 1} choices in the story.
+          Continue the story with a new paragraph, keeping the same style and tone. The story will be interactive, so end the paragraph with a situation that requires the reader to make a choice.
+          The story is ${reading.progress}% complete.
+          Respond with a JSON object with two fields: "text" containing the next part of the story, and "choices" containing a list of 3 possible next choices.
+          The generated content for "text" and "choices" must be in locale "${locale}".
+        `
+      } else {
+        prompt += `
+          The reader has reached the end of the story.
+          Conclude the story with a final paragraph that provides a satisfying ending.
+          Respond with a JSON object with two fields: "text" containing the conclusion of the story, and "choices" containing an empty list.
+          The generated content for "text" must be in locale "${locale}".
+        `
+      }
+
+
       const response = await generateJson<{ text: string, choices: string[] }>(prompt, {
         type: "object",
         properties: {
           text: { type: "string" },
           choices: {
             type: "array",
-            items: { type: "string" },
-            minItems: 3,
-            maxItems: 3
+            items: { type: "string" }
           }
         },
         required: ["text", "choices"]
@@ -187,6 +201,7 @@ export default function() {
 
       const cacheBusterParam = '?t=' + Date.now();
       reading.counter = (reading.counter || 1) + 1;
+      reading.progress = Math.round((reading.counter / (reading.book.counter || 100)) * 100);
 
       await db.send(new UpdateCommand({
         TableName: tableName,

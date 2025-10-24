@@ -23,6 +23,8 @@ declare global {
       it: string
     }
     imageUrl: string
+    counter: number
+    prompt: string
   }
 
   interface Reading {
@@ -32,5 +34,6 @@ declare global {
     imageUrl: string,
     choices: string[],
     counter: number,
+    progress: number,
   }
 }

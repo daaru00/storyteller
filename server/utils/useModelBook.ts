@@ -2,7 +2,7 @@ import { QueryCommand, GetCommand } from "@aws-sdk/lib-dynamodb"
 
 export default function() {
   const { client, tableName } = useDynamoDB()
-  const readAttributes = ['id', 'title', 'genre', 'summary', 'imageUrl']
+  const readAttributes = ['id', 'title', 'genre', 'summary', 'imageUrl', 'counter', 'prompt']
 
   return {
     listBooks: async (nextToken?: string) => {

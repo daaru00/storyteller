@@ -17,7 +17,8 @@
     "kids": "Bambini"
   },
   "book": {
-    "read": "Leggi"
+    "read": "Leggi",
+    "readingTime": "min"
   },
   "reading": {
     "list": "La mia lista"

@@ -9,9 +9,9 @@
       </v-col>
       <v-col cols="12" md="8">
         <p class="text-justify">{{ reading.text }}</p>
-        <div class="text-right">
-          <v-btn v-if="canSpeech && !isSpeaking" @click="startSpeech" icon="mdi-volume-high" size="x-small"></v-btn>
-          <v-btn v-if="canSpeech && isSpeaking" @click="cancelSpeech" color="red-darken-1" icon="mdi-stop" size="x-small"></v-btn>
+        <div class="text-right" v-if="canSpeech">
+          <v-btn v-if="!isSpeaking" @click="startSpeech" icon="mdi-volume-high" size="x-small"></v-btn>
+          <v-btn v-else @click="cancelSpeech" color="red-darken-1" icon="mdi-stop" size="x-small"></v-btn>
         </div>
       </v-col>
       <v-col>
@@ -54,6 +54,8 @@ onMounted(async () => {
 const { setReadingChoice } = useApi()
 const loading = ref(false)
 const selectChoice = async (choiceIndex: number) => {
+  cancelSpeech();
+
   loading.value = true
   try {
     reading.value = await setReadingChoice(readingId, choiceIndex, locale.value)
@@ -72,6 +74,10 @@ const startSpeech = () => {
   cancelSpeech();
   const utterance = new SpeechSynthesisUtterance(reading.value.text);
   utterance.lang = locale.value;
+  utterance.rate = 0.8;
+  utterance.onend = () => {
+    isSpeaking.value = false;
+  };
   window.speechSynthesis.speak(utterance);
   isSpeaking.value = true;
 }
