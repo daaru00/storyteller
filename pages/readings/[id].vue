@@ -1,6 +1,9 @@
 <template>
   <v-container max-width="800px">
     <v-row v-if="reading">
+      <v-col cols="12">
+        <h1 class="text-h4">{{ reading.book.title[locale] }}</h1>
+      </v-col>
       <v-col cols="12" md="4">
         <v-img :src="reading.imageUrl" cover height="100%" />
       </v-col>
