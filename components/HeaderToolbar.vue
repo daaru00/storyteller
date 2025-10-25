@@ -2,7 +2,7 @@
   <v-btn v-if="!isHomePage" @click="navigateTo('/')" icon="mdi-arrow-left"></v-btn>
   <v-spacer></v-spacer>
   <template v-if="isLoggedIn">
-    <v-avatar class="cursor-pointer" size="32">
+    <v-avatar class="cursor-pointer" size="32" @click="navigateTo('/profile')">
       <v-img :src="currentUser.image"></v-img>
     </v-avatar>
   </template>

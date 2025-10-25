@@ -10,7 +10,7 @@
         </div>
       </template>
     </v-img>
-    <v-card-title style="white-space: wrap; min-height: 4em;">{{ reading.book.title[locale] }}</v-card-title>
+    <v-card-text style="white-space: wrap; min-height: 4em;">{{ reading.book.title[locale] }}</v-card-text>
     <reading-progress :progress="reading.progress" />
   </v-card>
 </template>

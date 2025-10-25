@@ -14,5 +14,8 @@ export default defineEventHandler(async (event) => {
   let reading = await createReading(user.sub, book, body.locale || 'en')
   await updateHistory(user.sub, reading.id, reading.text)
 
+  const { incrementCounter } = useModelProfile()
+  await incrementCounter(user.email)
+
   return reading as Reading
 })

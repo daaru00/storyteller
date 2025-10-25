@@ -21,6 +21,7 @@ export default function() {
       });
 
       if (!response || !response.text) {
+        console.error(JSON.stringify(response, null, 2));
         throw new Error("No text generated");
       }
 
@@ -38,6 +39,7 @@ export default function() {
       });
 
       if (!response || !response.text) {
+        console.error(JSON.stringify(response, null, 2));
         throw new Error("No text generated");
       }
 
@@ -54,12 +56,13 @@ export default function() {
       });
     
       if (!response || !response.candidates || response.candidates.length === 0 || !response.candidates[0].content || !response.candidates[0].content.parts) {
+        console.error(JSON.stringify(response, null, 2));
         throw new Error("No image generated");
       }
 
       const inlineData = response.candidates[0].content.parts.find(part => part.inlineData && part.inlineData.data);
       if (!inlineData || !inlineData.inlineData || !inlineData.inlineData.data) {
-        console.log("Response candidates:", JSON.stringify(response.candidates, null, 2));
+        console.error(JSON.stringify(response, null, 2));
         throw new Error("No image data found");
       }
 

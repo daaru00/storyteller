@@ -8,6 +8,12 @@ declare global {
 
   interface Profile extends AuthUser {
     name: string
+    givenName: string
+    familyName: string
+    locale: string
+    preferences?: Record<string, any>
+    disabled?: boolean
+    counter: number
     image?: string
   }
 

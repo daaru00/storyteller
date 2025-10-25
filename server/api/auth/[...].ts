@@ -35,7 +35,8 @@ export default NuxtAuthHandler({
       if (!exist) {
         await createProfile(profile.email, {
           givenName: profile.given_name,
-          familyName: profile.family_name
+          familyName: profile.family_name,
+          locale: profile.locale,
         })
         console.log('User registered', profile)
       } else {

@@ -18,9 +18,15 @@
   },
   "book": {
     "read": "Read",
-    "readingTime": "min"
+    "readingTime": "min",
+    "infinite": "Infinite"
   },
   "reading": {
     "list": "My Reading List"
+  },
+  "profile": {
+    "readingTime": "Reading Time: {time} min",
+    "level": "Level {level}",
+    "logout": "Logout"
   }
 }

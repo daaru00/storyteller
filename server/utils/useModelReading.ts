@@ -85,6 +85,7 @@ export default function() {
           Create an evocative and atmospheric illustration for the following story paragraph: "${response.text}". 
           The style should match the genre of the story: "${book.genre}".
           Do not include any text or labels in the image.
+          Do not add a border to the image, make it full screen.
         `,
         {
           aspectRatio: "9:16"
@@ -150,25 +151,29 @@ export default function() {
         ${history}
         ---
         The reader made the choice: "${choice}".
+        The generated content for "text" and "choices" must be in locale "${locale}".
       `
-
-      if (reading.progress < 100) {
-        prompt += `
-          The reader so far made ${reading.counter || 1} choices in the story.
-          Continue the story with a new paragraph, keeping the same style and tone. The story will be interactive, so end the paragraph with a situation that requires the reader to make a choice.
-          The story is ${reading.progress}% complete.
-          Respond with a JSON object with two fields: "text" containing the next part of the story, and "choices" containing a list of 3 possible next choices.
-          The generated content for "text" and "choices" must be in locale "${locale}".
-        `
+      if (reading.book.counter > 0) {
+        if (reading.progress < 100) {
+          prompt += `
+            The reader so far made ${reading.counter || 1} choices in the story.
+            Continue the story with a new paragraph, keeping the same style and tone. The story will be interactive, so end the paragraph with a situation that requires the reader to make a choice.
+            The story is ${reading.progress}% complete.
+            Respond with a JSON object with two fields: "text" containing the next part of the story, and "choices" containing a list of 3 possible next choices.
+          `
+        } else {
+          prompt += `
+            The reader has reached the end of the story.
+            Conclude the story with a final paragraph that provides a satisfying ending.
+            Respond with a JSON object with two fields: "text" containing the conclusion of the story, and "choices" containing an empty list.
+          `
+        }
       } else {
         prompt += `
-          The reader has reached the end of the story.
-          Conclude the story with a final paragraph that provides a satisfying ending.
-          Respond with a JSON object with two fields: "text" containing the conclusion of the story, and "choices" containing an empty list.
-          The generated content for "text" must be in locale "${locale}".
+          Continue the story with a new paragraph, keeping the same style and tone. The story will be interactive, so end the paragraph with a situation that requires the reader to make a choice.
+          Respond with a JSON object with two fields: "text" containing the next part of the story, and "choices" containing a list of 3 possible next choices.
         `
       }
-
 
       const response = await generateJson<{ text: string, choices: string[] }>(prompt, {
         type: "object",
@@ -187,6 +192,7 @@ export default function() {
           Create an evocative and atmospheric illustration for the following story paragraph: "${response.text}". 
           The style should match the genre of the story: "${reading.book.genre}".
           Do not include any text or labels in the image.
+          Do not add a border to the image, make it full screen.
         `,
         {
           aspectRatio: "9:16"
@@ -201,7 +207,11 @@ export default function() {
 
       const cacheBusterParam = '?t=' + Date.now();
       reading.counter = (reading.counter || 1) + 1;
-      reading.progress = Math.round((reading.counter / (reading.book.counter || 100)) * 100);
+      if (reading.book.counter > 0) {
+        reading.progress = Math.round((reading.counter / reading.book.counter) * 100);
+      } else {
+        reading.progress = 0;
+      }
 
       await db.send(new UpdateCommand({
         TableName: tableName,
@@ -209,18 +219,20 @@ export default function() {
           entity: 'READ',
           id: userId + '#' + reading.id
         },
-        UpdateExpression: 'SET #text = :text, #imageUrl = :imageUrl, #choices = :choices, #counter = :counter',
+        UpdateExpression: 'SET #text = :text, #imageUrl = :imageUrl, #choices = :choices, #counter = :counter, #progress = :progress',
         ExpressionAttributeValues: {
           ':text': response.text,
           ':imageUrl': publicUrl + `/${userId}/readings/${reading.id}.png${cacheBusterParam}`,
           ':choices': response.choices,
           ':counter': reading.counter,
+          ':progress': reading.progress,
         },
         ExpressionAttributeNames: {
           '#text': 'text',
           '#imageUrl': 'imageUrl',
           '#choices': 'choices',
-          '#counter': 'counter'
+          '#counter': 'counter',
+          '#progress': 'progress',
         }
       }))
 

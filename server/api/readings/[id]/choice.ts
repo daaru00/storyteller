@@ -21,6 +21,9 @@ export default defineEventHandler(async (event) => {
   const history = await getHistory(user.sub, readingId) || ''
   const result = await generateNext(user.sub, reading, history, reading.choices[body.choice], body.locale || 'en')
   await updateHistory(user.sub, readingId, history + result.text)
+  
+  const { incrementCounter } = useModelProfile()
+  await incrementCounter(user.email)
 
   return {
     ...reading,

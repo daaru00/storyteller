@@ -2,7 +2,7 @@ import { GetCommand, PutCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb"
 
 export default function() {
   const { client, tableName } = useDynamoDB()
-  const readAttributes = ['givenName','familyName','locale', 'preferences', 'disabled']
+  const readAttributes = ['givenName','familyName','locale', 'preferences', 'disabled', 'counter']
   const writeAttributes = ['givenName','familyName','locale', 'preferences']
 
   return {
@@ -117,6 +117,23 @@ export default function() {
         },
         ExpressionAttributeValues: {
           ':disabled': true
+        }
+      }))
+    },
+    incrementCounter: async (user: string, incrementBy: number = 1) => {
+      await client.send(new UpdateCommand({
+        TableName: tableName,
+        Key: {
+          entity: 'PROFILE',
+          id: user,
+        },
+        UpdateExpression: 'SET #counter = if_not_exists(#counter, :zero) + :incrementBy',
+        ExpressionAttributeNames: {
+          '#counter': 'counter'
+        },
+        ExpressionAttributeValues: {
+          ':incrementBy': incrementBy,
+          ':zero': 0
         }
       }))
     }
